@@ -1,0 +1,3 @@
+C:/Users/A/CLionProjects/MyWordBook/cmake-build-debug/CMakeFiles/MyWordBook.dir
+C:/Users/A/CLionProjects/MyWordBook/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/A/CLionProjects/MyWordBook/cmake-build-debug/CMakeFiles/rebuild_cache.dir
