@@ -1,0 +1,7 @@
+[
+{
+  "directory": "D:/VSCode/MyWordBook/build",
+  "command": "C:\\Users\\A\\Downloads\\mingw64\\bin\\g++.exe   -g -std=gnu++14 -o CMakeFiles\\MyWordBook.dir\\main.cpp.obj -c D:\\VSCode\\MyWordBook\\main.cpp",
+  "file": "D:/VSCode/MyWordBook/main.cpp"
+}
+]
