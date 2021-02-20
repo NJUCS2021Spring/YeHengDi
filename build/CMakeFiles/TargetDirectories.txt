@@ -1,3 +1,0 @@
-D:/VSCode/MyWordBook/build/CMakeFiles/MyWordBook.dir
-D:/VSCode/MyWordBook/build/CMakeFiles/edit_cache.dir
-D:/VSCode/MyWordBook/build/CMakeFiles/rebuild_cache.dir
