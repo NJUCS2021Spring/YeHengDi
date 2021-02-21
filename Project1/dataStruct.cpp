@@ -3,6 +3,7 @@
 //
 
 #include "dataStruct.h"
+#include <string>
 #include <cstring>
 #include <algorithm>
 #include <fstream>
@@ -77,7 +78,7 @@ public:
         pt<<'/'<<wrd.example<<'\n';
         pt.close();
     }
-};
+};//word class.
 
 class group{
 private:
@@ -143,4 +144,23 @@ public:
         w<<'/'<<(grp.isName?"#":grp.reason)<<'\n';
         w.close();
     }
+};//group class.
+
+class step {
+private:
+    std::vector<void(*)()> funcs;
+    std::vector<step*> lasts;
+    std::vector<step*> nexts;
+public:
+    step(std::vector<void(*)()> funcs, std::vector<step*> lasts, std::vector<step*> nexts) {
+        this->funcs = funcs;
+        this->lasts = lasts;
+        this->nexts = nexts;
+    }
+
+    void succ(step *suc) {
+        this->nexts.push_back(suc);
+        suc->lasts.push_back(this);
+    }
+
 };
