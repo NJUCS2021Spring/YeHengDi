@@ -75,6 +75,7 @@ public:
             pt<<i<<';';
         }
         pt<<'/'<<wrd.example<<'\n';
+        pt.close();
     }
 };
 
@@ -91,10 +92,8 @@ private:
         for(i = 0;a[i] != '\0' && b[i] != '\0';i++){
             a[i] = tolower(a[i]),b[i] = tolower(b[i]);
             int j = int(a[i] - b[i]);
-            if(j < 0){
-                return true;
-            }else if(j > 0){
-                return false;
+            if (!j){
+                return j < 0;
             }
         }
         return a[i] == '\0';
