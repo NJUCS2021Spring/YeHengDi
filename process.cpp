@@ -42,9 +42,6 @@ void readWord() {
         word *a = new word(temp[0], ws, temp[2]);
         wrds[a->name] = a;
     }
-    for (auto &p:wrds) {
-        word::display(p.second);
-    }
 }
 
 void readGroup() {
@@ -73,7 +70,20 @@ void readGroup() {
             grps.push_back(a);
         }
     }
-    for(group* i:grps){
-        group::display(*i);
-    }
+}
+
+void load(){
+    readWord();
+    readGroup();
+}
+
+void mainMenu(){
+    std::cout<<"\t\t---------------------------------\t\t\n"
+               "\t\t|    1. check groups of word    |\t\t\n"
+               "\t\t|    2. new group               |\t\t\n"
+               "\t\t|    3. all groups              |\t\t\n"
+               "\t\t|    4. edit word card          |\t\t\n"
+               "\t\t|    5. exit()                  |\t\t\n"
+               "\t\t---------------------------------\t\t\n"
+               "Please select: ";
 }

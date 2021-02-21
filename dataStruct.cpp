@@ -15,10 +15,10 @@ private:
     std::string example;
 public:
     std::string name;
-    word(std::string name, std::vector<std::string> meanings = {}, std::string example = "None") {
-        this->name = name;
-        this->meaning = meanings;
-        this->example = example;
+    explicit word(std::string name, std::vector<std::string> meanings = {}, std::string example = "None") {
+        this->name = std::move(name);
+        this->meaning = std::move(meanings);
+        this->example = std::move(example);
     }
 
     word() {
@@ -107,7 +107,7 @@ private:
     }
 
 public:
-    group(const std::vector<word*> &wrds = {}, bool isName = true, const std::string &reason = "") {
+    explicit group(const std::vector<word*> &wrds = {}, bool isName = true, const std::string &reason = "") {
         this->id = globalID;
         globalID++;
         this->words = wrds;

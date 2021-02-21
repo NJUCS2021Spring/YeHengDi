@@ -6,10 +6,12 @@
 #define PROJECT1_PROCESS_H
 #include <vector>
 #include <map>
-#include "dataStruct.h"
+#include "dataStruct.cpp"
 extern std::map<std::string, word> wrds;
 extern std::vector<group> grps;
 void readWord();
 void readGroup();
+void load();
+void mainMenu();
 
 #endif //PROJECT1_PROCESS_H
