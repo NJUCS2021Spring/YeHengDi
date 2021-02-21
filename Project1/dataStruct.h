@@ -1,9 +1,0 @@
-//
-// Created by A on 2021/2/20.
-//
-
-#ifndef PROJECT1_DATASTRUCT_H
-#define PROJECT1_DATASTRUCT_H
-class word;
-class group;
-#endif //PROJECT1_DATASTRUCT_H
