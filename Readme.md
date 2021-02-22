@@ -46,8 +46,6 @@ All the words are stored in a `map<string, word>`, whose string is actually `wor
     ```c++
 /*Consider treating the whole program as a Linked List, each node of which contains function, next, last, note that next and last are arrays of node pointers, and function is a function pointer. This way I do not need to write tons of switch and goto because numbers can be directly used as indexes of arrays, while making the program easier to understand. */
     // However I still have to write tons of display functions, Hell!
-```
+    ```
     
     That was too difficult, I would rather functional.
-    
-    
