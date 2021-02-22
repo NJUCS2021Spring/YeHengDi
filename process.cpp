@@ -14,24 +14,17 @@ map<string, word *> wrds;
 vector<group *> grps;
 
 
-
-void modifyLineData(char* fileName, int lineNum, string lineData)
-{
+void modifyLineData(char *fileName, int lineNum, string lineData) {
     ifstream in;
     in.open(fileName);
-
     string strFileData;
     int line = 1;
     char tmpLineData[1024] = {0};
-    while(in.getline(tmpLineData, sizeof(tmpLineData)))
-    {
-        if (line == lineNum)
-        {
+    while (in.getline(tmpLineData, sizeof(tmpLineData))) {
+        if (line == lineNum) {
             strFileData += lineData;
             strFileData += "\n";
-        }
-        else
-        {
+        } else {
             strFileData += tmpLineData;
             strFileData += "\n";
         }
@@ -43,7 +36,7 @@ void modifyLineData(char* fileName, int lineNum, string lineData)
     ofstream out;
     out.open(fileName);
     out.flush();
-    out<<strFileData;
+    out << strFileData;
     out.close();
 }
 
@@ -62,10 +55,10 @@ vector<string> split(string str, const string &separator) {
     return result;
 }
 
-int getLineNumber(ifstream& a, const string& name){
+int getLineNumber(ifstream &a, const string &name) {
     string tmp;
     int i = 0;
-    for(;tmp != name;i++,getline(a, tmp),tmp = split(tmp,"/")[0]);
+    for (; tmp != name; i++, getline(a, tmp), tmp = split(tmp, "/")[0]);
     return i;
 }
 
@@ -120,7 +113,7 @@ void readWord() {
         vector<string> ws = split(temp[1], ";");
         word *a = new word(temp[0], ws, temp[2]);
         wrds[a->name] = a;
-        getline(rd,all);
+        getline(rd, all);
     }
 }
 
@@ -134,6 +127,9 @@ void readGroup() {
     }
     string all;
     while (getline(rg, all)) {
+        if (all.empty()){
+            continue;
+        }
         vector<string> temp = split(all, "/");
         vector<string> ws = split(temp[0], ";");
         bool isName = temp[1] == "#";
@@ -197,9 +193,50 @@ void editW(word *wd) {
             cin >> ex;
             wd->addMeaning(ex);
         }
-        ifstream b("data/words.bk",ios::app);
+        ifstream b("data/words.bk", ios::app);
         modifyLineData("data/words.bk", getLineNumber(b, wd->name), wd->toStr());
-        cout<<"Please choose:";
+        cout << "Please choose:";
+        cin >> i;
+    }
+}
+
+void groupEdit(group* g) {
+    cout<<"\t\t--------------------------\t\t\n"
+          "\t\t|      1.add word        |\t\t\n"
+          "\t\t|      2.edit words      |\t\t\n"
+          "\t\t|      3.exit()          |\t\t\n"
+          "\t\t--------------------------\t\t\n";
+    int i;
+    cout<<"Please choose one.\n>>> ";
+    cin>>i;
+    while(i - 3){
+        if (i == 1){
+            cout<<"Please enter word.\n>>> ";
+            string name;
+            cin>>name;
+            if(wrds.count(name)){
+                g->addMember(wrds[name]);
+            }else{
+                word* w = new word(name);
+                g->addMember(w);
+            }
+        }else if(i == 2){
+            cout<<"Please enter word.\n>>> ";
+            string name;
+            cin>>name;
+            if(wrds.count(name)){
+                editW(wrds[name]);
+            }else{
+                cout<<"Not found, please enter something else.\n";
+            }
+        }
+        modifyLineData("data/groups.bk",g->ID()+1,g->toStr());
+        cout<<"\t\t--------------------------\t\t\n"
+              "\t\t|      1.add word        |\t\t\n"
+              "\t\t|      2.edit words      |\t\t\n"
+              "\t\t|      3.exit()          |\t\t\n"
+              "\t\t--------------------------\t\t\n";
+        cout<<"Please choose one.\n>>> ";
         cin>>i;
     }
 }
@@ -269,20 +306,20 @@ void newGroup() {
 //MAINMENU3 (display all groups
 void allGroup() {
     groupProfile(grps);
-    cout<<"Choose group? Enter x to exit.\n"
-          ">>> ";
+    cout << "Choose group? Enter x to exit.\n"
+            ">>> ";
     char i;
-    cin>>i;
-    while(i != 'x'){
-        int index = (int)(i - '0');
-        if (index < grps.size()){
+    cin >> i;
+    while (i != 'x') {
+        int index = (int) (i - '0');
+        if (index < grps.size()) {
             group::display(*grps[index]);
-
-        }else{
-            cout<<"This group does not exist.";
+            groupEdit(grps[index]);
+        } else {
+            cout << "This group does not exist.";
         }
-        cout<<">>> ";
-        cin>>i;
+        cout << ">>> ";
+        cin >> i;
     }
 }
 
@@ -328,7 +365,7 @@ void newWord() {
     if (example.empty()) {
         example = "None";
     }
-    word* a = new word(name, meaning, example);
+    word *a = new word(name, meaning, example);
     wrds[name] = a;
     word::write(*a);
 }

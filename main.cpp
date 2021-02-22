@@ -15,6 +15,6 @@ int main() {
         }else{
             cout<<"Please enter valid number.\n";
         }
-        cout<<">>> ";
+        mainMenu();
     }
 }

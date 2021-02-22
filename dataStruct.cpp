@@ -109,8 +109,10 @@ public:
     }
 
     void addMember(word *wrd) {
-        this->words.push_back(wrd);
-        this->srt();
+        if(find(this->words.begin(),this->words.end(), wrd) == this->words.end()) {
+            this->words.push_back(wrd);
+            this->srt();
+        }
     }
 
     unsigned ID(){
@@ -153,7 +155,7 @@ public:
         for(const word *i : this->words){
             str += i->name + ';';
         }
-        str += '/' + (this->isName ? "#" : this->reason) + '\n';
+        str += '/' + (this->isName ? "#" : this->reason);
         return str;
     }
 

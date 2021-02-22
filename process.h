@@ -21,6 +21,7 @@ void mainMenu();
 void allWord();
 void checkGroupWord();
 void newGroup();
+void groupEdit();
 void allGroup();
 void editWordCard();
 void modifyLineData(char* fileName, int lineNum, std::string lineData);
