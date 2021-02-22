@@ -5,6 +5,4 @@ using namespace std;
 int main() {
     load();
     mainMenu();
-    short i;
-    cin>>i;
 }

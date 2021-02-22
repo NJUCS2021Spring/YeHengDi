@@ -4,6 +4,7 @@
 
 #ifndef PROJECT1_DATASTRUCT_H
 #define PROJECT1_DATASTRUCT_H
+//extern unsigned globalID;
 
 class word;
 

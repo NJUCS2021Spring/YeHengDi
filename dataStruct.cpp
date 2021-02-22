@@ -15,6 +15,7 @@ private:
     std::string example;
 public:
     std::string name;
+
     explicit word(std::string name, std::vector<std::string> meanings = {}, std::string example = "None") {
         this->name = std::move(name);
         this->meaning = std::move(meanings);
@@ -37,14 +38,14 @@ public:
                   << "Please add an example sentence: " << std::endl;
         getchar();
         getline(std::cin, name);
-        if (name.empty()){
+        if (name.empty()) {
             this->example = "None";
-        }else{
+        } else {
             this->example = name;
         }
     }
 
-    static void display(word* wrd) {
+    static void display(word *wrd) {
         std::cout << wrd->name << std::endl
                   << "\tMeanings: ";
         if (wrd->meaning.empty()) {
@@ -80,18 +81,35 @@ public:
         pt.close();
     }
 };//word class.
-
+static unsigned globalID = 0;
 class group {
 private:
-    unsigned globalID = 0;
-    unsigned id;
-    std::vector<word*> words;
-    bool isName;
-    std::string reason;
 
-    static bool sortword(word* A, word* B) {
+    unsigned id;
+    bool isName;
+
+    static bool sortword(word *A, word *B) {
+        return mystrCmp(A->name, B->name);
+    }
+
+    void srt() {
+        sort(this->words.begin(), this->words.end(), sortword);
+    }
+
+public:
+    std::string reason;
+    std::vector<word *> words;
+    explicit group(const std::vector<word *> &wrds = {}, bool isName = true, const std::string &reason = "") {
+        this->id = globalID;
+        globalID++;
+        this->words = wrds;
+        this->isName = isName;
+        this->reason = reason;
+        this->srt();
+    }
+
+    static bool mystrCmp(std::string a, std::string b) {
         int i;
-        std::string a = A->name, b = B->name;
         for (i = 0; a[i] != '\0' && b[i] != '\0'; i++) {
             a[i] = tolower(a[i]), b[i] = tolower(b[i]);
             int j = int(a[i] - b[i]);
@@ -102,23 +120,17 @@ private:
         return a[i] == '\0';
     }
 
-    void srt() {
-        sort(this->words.begin(), this->words.end(), sortword);
-    }
-
-public:
-    explicit group(const std::vector<word*> &wrds = {}, bool isName = true, const std::string &reason = "") {
-        this->id = globalID;
-        globalID++;
-        this->words = wrds;
-        this->isName = isName;
-        this->reason = reason;
-        this->srt();
-    }
-
-    void addMember(word* wrd) {
+    void addMember(word *wrd) {
         this->words.push_back(wrd);
         this->srt();
+    }
+
+    unsigned ID(){
+        return this->id;
+    }
+
+    bool Reason(){
+        return this->isName;
     }
 
     static void display(group grp) {
@@ -155,7 +167,7 @@ private:
     std::vector<step *> lasts;
     std::vector<step *> nexts;
 public:
-    step(std::vector<void (*)()> funcs, std::vector<step *> lasts, std::vector<step *> nexts) {
+    step(std::vector<void (*)()> funcs = {}, std::vector<step *> lasts = {}, std::vector<step *> nexts = {}) {
         this->funcs = std::move(funcs);
         this->lasts = std::move(lasts);
         this->nexts = std::move(nexts);
