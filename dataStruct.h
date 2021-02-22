@@ -10,6 +10,4 @@ class word;
 
 class group;
 
-class step;
-
 #endif //PROJECT1_DATASTRUCT_H

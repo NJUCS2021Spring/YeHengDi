@@ -22,28 +22,6 @@ public:
         this->example = std::move(example);
     }
 
-    word() {
-        std::string temp;
-        std::cout << "Please enter word name: ";
-        std::cin >> this->name;
-        std::cout << '\n'
-                  << "Please enter meanings, using '#' as the end: ";
-        while (std::cin >> temp) {
-            if (temp == "#") {
-                break;
-            }
-            this->meaning.push_back(temp);
-        }
-        std::cout << '\n'
-                  << "Please add an example sentence: " << std::endl;
-        getchar();
-        getline(std::cin, name);
-        if (name.empty()) {
-            this->example = "None";
-        } else {
-            this->example = name;
-        }
-    }
 
     static void display(word *wrd) {
         std::cout << wrd->name << std::endl
@@ -160,36 +138,3 @@ public:
         w.close();
     }
 };//group class.
-
-class step {
-private:
-    std::vector<void (*)()> funcs;
-    std::vector<step *> lasts;
-    std::vector<step *> nexts;
-public:
-    step(std::vector<void (*)()> funcs = {}, std::vector<step *> lasts = {}, std::vector<step *> nexts = {}) {
-        this->funcs = std::move(funcs);
-        this->lasts = std::move(lasts);
-        this->nexts = std::move(nexts);
-    }
-
-    void succ(step *suc) {
-        this->nexts.push_back(suc);
-        suc->lasts.push_back(this);
-    }
-
-    step *next(unsigned i) {
-        this->nexts[i]->funcs[0]();
-        return this->nexts[i];
-    }
-
-    step *last(unsigned i) {
-        this->lasts[i]->funcs[0]();
-        return this->lasts[i];
-    }
-
-    void excu(unsigned i) {
-        this->funcs[i]();
-    }
-
-};
