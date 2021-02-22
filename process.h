@@ -23,4 +23,6 @@ void checkGroupWord();
 void newGroup();
 void allGroup();
 void editWordCard();
+void modifyLineData(char* fileName, int lineNum, std::string lineData);
+int getLineNumber(std::ifstream& a, const std::string& name);
 #endif //PROJECT1_PROCESS_H

@@ -14,6 +14,39 @@ map<string, word *> wrds;
 vector<group *> grps;
 
 
+
+void modifyLineData(char* fileName, int lineNum, string lineData)
+{
+    ifstream in;
+    in.open(fileName);
+
+    string strFileData;
+    int line = 1;
+    char tmpLineData[1024] = {0};
+    while(in.getline(tmpLineData, sizeof(tmpLineData)))
+    {
+        if (line == lineNum)
+        {
+            strFileData += lineData;
+            strFileData += "\n";
+        }
+        else
+        {
+            strFileData += tmpLineData;
+            strFileData += "\n";
+        }
+        line++;
+    }
+    in.close();
+
+    //写入文件
+    ofstream out;
+    out.open(fileName);
+    out.flush();
+    out<<strFileData;
+    out.close();
+}
+
 vector<string> split(string str, const string &separator) {
     vector<string> result;
     int cutAt;
@@ -29,11 +62,16 @@ vector<string> split(string str, const string &separator) {
     return result;
 }
 
+int getLineNumber(ifstream& a, const string& name){
+    string tmp;
+    int i = 0;
+    for(;tmp != name;i++,getline(a, tmp),tmp = split(tmp,"/")[0]);
+    return i;
+}
+
 void newline() {
     cout << "-----------------------------------------------------------------------\n";
 }
-
-
 
 void groupProfile(const vector<group *> &que) {
     if (que.empty()) {
@@ -64,12 +102,12 @@ void groupProfile(const vector<group *> &que) {
 }
 
 void exit() {
-    system;
+    system("exit");
 }
 
 void readWord() {
     ifstream rd;
-    rd.open("words.bk");
+    rd.open("data/words.bk");
     if (rd.fail()) {
         cout << "Failed to read words.bk. I'm dying now.\n";
         system("pause");
@@ -88,7 +126,7 @@ void readWord() {
 
 void readGroup() {
     ifstream rg;
-    rg.open("groups.bk");
+    rg.open("data/groups.bk");
     if (rg.fail()) {
         cout << "Failed to read groups.bk. I'm dying now.\n";
         system("pause");
@@ -151,14 +189,16 @@ void editW(word *wd) {
         string ex;
         if (i == 1) {
             cout << "Enter new example.\n>>> ";
-            cin >> ex;
+            getchar();
+            getline(cin, ex);
             wd->addExample(ex);
         } else if (i == 2) {
             cout << "Enter new meaning.\n>>> ";
             cin >> ex;
             wd->addMeaning(ex);
         }
-        word::write(*wd);
+        ifstream b("data/words.bk",ios::app);
+        modifyLineData("data/words.bk", getLineNumber(b, wd->name), wd->toStr());
         cout<<"Please choose:";
         cin>>i;
     }
@@ -229,6 +269,21 @@ void newGroup() {
 //MAINMENU3 (display all groups
 void allGroup() {
     groupProfile(grps);
+    cout<<"Choose group? Enter x to exit.\n"
+          ">>> ";
+    char i;
+    cin>>i;
+    while(i != 'x'){
+        int index = (int)(i - '0');
+        if (index < grps.size()){
+            group::display(*grps[index]);
+
+        }else{
+            cout<<"This group does not exist.";
+        }
+        cout<<">>> ";
+        cin>>i;
+    }
 }
 
 //MAINMENU4 (edit word information.

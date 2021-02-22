@@ -58,6 +58,16 @@ public:
         pt << '/' << wrd.example << '\n';
         pt.close();
     }
+
+    std::string toStr(){
+        std::string str = this->name + '/';
+        for (const std::string &i : this->meaning){
+            str += i + ';';
+        }
+        str += '/' + this->example;
+        return str;
+    }
+
 };//word class.
 static unsigned globalID = 0;
 class group {
@@ -137,4 +147,14 @@ public:
         w << '/' << (grp.isName ? "#" : grp.reason) << '\n';
         w.close();
     }
+
+    std::string toStr(){
+        std::string str;
+        for(const word *i : this->words){
+            str += i->name + ';';
+        }
+        str += '/' + (this->isName ? "#" : this->reason) + '\n';
+        return str;
+    }
+
 };//group class.
