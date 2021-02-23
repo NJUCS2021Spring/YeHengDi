@@ -96,26 +96,27 @@ void groupProfile(const vector<group *> &que) {
 
 void readWord() {
     ifstream rd;
-    rd.open("data/words.bk");
+    rd.open("data/words.bk",ios::app);
     if (rd.fail()) {
         cout << "Failed to read words.bk. I'm dying now.\n";
         system("pause");
         exit(114514);
     }
     string all;
-    getline(rd, all);
-    while (!all.empty()) {
+    while (getline(rd, all)) {
+        if(all.empty()){
+            continue;
+        }
         vector<string> temp = split(all, "/");
         vector<string> ws = split(temp[1], ";");
         word *a = new word(temp[0], ws, temp[2]);
         wrds[a->name] = a;
-        getline(rd, all);
     }
 }
 
 void readGroup() {
     ifstream rg;
-    rg.open("data/groups.bk");
+    rg.open("data/groups.bk",ios::app);
     if (rg.fail()) {
         cout << "Failed to read groups.bk. I'm dying now.\n";
         system("pause");
@@ -217,6 +218,8 @@ void groupEdit(group* g) {
                 g->addMember(wrds[name]);
             }else{
                 word* w = new word(name);
+                word::write(*w);
+                wrds[name] = w;
                 g->addMember(w);
             }
         }else if(i == 2){
@@ -312,7 +315,9 @@ void allGroup() {
     while (i != 'x') {
         int index = (int) (i - '0');
         if (index < grps.size()) {
+            newline();
             group::display(*grps[index]);
+            newline();
             groupEdit(grps[index]);
         } else {
             cout << "This group does not exist.\n";
