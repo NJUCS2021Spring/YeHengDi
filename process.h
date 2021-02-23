@@ -12,7 +12,6 @@ extern std::vector<group*> grps;
 void newWord();
 void newline();
 void groupProfile(const std::vector<group*>& que);
-void exit();
 void readWord();
 void readGroup();
 void editW();

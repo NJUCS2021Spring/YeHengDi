@@ -46,7 +46,7 @@ public:
 
     static void write(const word &wrd) {
         std::ofstream pt;
-        pt.open("words.bk", std::ios::app);
+        pt.open("data/words.bk", std::ios::app);
         if (pt.fail()) {
             std::cout << "Fail to open file.";
             return;
@@ -141,7 +141,7 @@ public:
 
     static void write(const group &grp) {
         std::ofstream w;
-        w.open("groups.bk", std::ios::app);
+        w.open("data/groups.bk", std::ios::app);
         std::string meaning;
         for (const word *i : grp.words) {
             w << i->name << ';';

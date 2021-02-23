@@ -94,17 +94,13 @@ void groupProfile(const vector<group *> &que) {
     newline();
 }
 
-void exit() {
-    system("exit");
-}
-
 void readWord() {
     ifstream rd;
     rd.open("data/words.bk");
     if (rd.fail()) {
         cout << "Failed to read words.bk. I'm dying now.\n";
         system("pause");
-        exit();
+        exit(114514);
     }
     string all;
     getline(rd, all);
@@ -123,7 +119,7 @@ void readGroup() {
     if (rg.fail()) {
         cout << "Failed to read groups.bk. I'm dying now.\n";
         system("pause");
-        exit();
+        exit(114514);
     }
     string all;
     while (getline(rg, all)) {
@@ -166,10 +162,13 @@ void mainMenu() {
 }
 
 void allWord() {
+    newline();
     cout << "All Words:\n";
     for (const auto &i:wrds) {
         cout << i.first << " ";
     }
+    cout<<'\n';
+    newline();
 }
 
 void editW(word *wd) {
@@ -244,7 +243,7 @@ void groupEdit(group* g) {
 //MAINMENU 1 (used to find the groups a word belongs to.
 void checkGroupWord() {
     string w;
-    cout << "Enter the word you want to find, enter # to exit\n>>>";
+    cout << "Enter the word you want to find, enter # to exit\n>>> ";
     cin >> w;
     while (w != "#") {
         //cout<<endl;
@@ -263,7 +262,7 @@ void checkGroupWord() {
         } else {
             cout << "Word not found, please check your word bank and enter again.\n";
         }
-        cout << ">>> ";
+        cout << "Enter the word you want to find, enter # to exit\n>>> ";
         cin >> w;
     }
 }
@@ -316,9 +315,9 @@ void allGroup() {
             group::display(*grps[index]);
             groupEdit(grps[index]);
         } else {
-            cout << "This group does not exist.";
+            cout << "This group does not exist.\n";
         }
-        cout << ">>> ";
+        cout << "Choose group? Enter x to exit.\n>>> ";
         cin >> i;
     }
 }
