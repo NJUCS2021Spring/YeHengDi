@@ -16,6 +16,7 @@ private:
 public:
     std::string name;
 
+
     explicit word(std::string name, std::vector<std::string> meanings = {}, std::string example = "None") {
         this->name = std::move(name);
         this->meaning = std::move(meanings);
@@ -66,6 +67,10 @@ public:
         }
         str += '/' + this->example;
         return str;
+    }
+
+    std::vector<std::string> getMean(){
+        return this->meaning;
     }
 
 };//word class.
