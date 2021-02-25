@@ -13,10 +13,21 @@ using namespace std;
 map<string, word *> wrds;
 vector<group *> grps;
 
-map<string, word*> searchW(bool(*comp)(word*,const string&),const string& flag, const map<string, word *>& bank = wrds){
-    map<string,word*> res;
-    for(auto& i:bank){
-        if (comp(i.second,flag)){
+bool strMatch(const string &target, const string &feature) {
+    if (target.length() < feature.length())return false;
+    for (int i = 0; feature[i] != '\0'; i++) {
+        if (target[i] != feature[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+map<string, word *>
+searchW(bool(*comp)(word *, const string &), const string &flag, const map<string, word *> &bank = wrds) {
+    map<string, word *> res;
+    for (auto &i:bank) {
+        if (comp(i.second, flag)) {
             res[i.first] = i.second;
         }
     }
@@ -32,7 +43,7 @@ void errorProcess(const string &msg, void(*func)()) {
     }
 }
 
-void modifyLineData(char *fileName, int lineNum, string lineData) {
+void modifyLineData(char *fileName, unsigned lineNum, const string &lineData) {
     ifstream in;
     in.open(fileName);
     string strFileData;
@@ -163,7 +174,7 @@ void readGroup() {
     }
 }
 
-void singWords(const map<string,word*>& bank = wrds){
+void singWords(const map<string, word *> &bank = wrds) {
     newline();
     cout << "All Words:\n";
     for (const auto &i:bank) {
@@ -276,20 +287,23 @@ void search() {
     cin >> choice;
     while (choice - 3) {
         if (choice == 1) {
-            cout<<"Which way to search? \n 0:name\n 1:meaning\n>>> ";
+            cout << "Which way to search? \n 0:name\n 1:meaning\n>>> ";
             int isMeaning;
-            cin>>isMeaning;
-            errorProcess("Do not write shit.",[](){cout<<"Which way to search? \n 0:name\n 1:meaning\n>>> ";});
-            if(isMeaning){
+            cin >> isMeaning;
+            errorProcess("Do not write shit.", []() { cout << "Which way to search? \n 0:name\n 1:meaning\n>>> "; });
+            if (isMeaning) {
                 string mean;
-                cout<<"Please enter a meaning.>>> ";
-                cin>>mean;
-                singWords(searchW([](word* a,const string& flag)->bool{vector<string> m = a->getMean(); return count(m.begin(),m.end(),flag);},mean));
-            }else{
+                cout << "Please enter a meaning.>>> ";
+                cin >> mean;
+                singWords(searchW([](word *a, const string &flag) -> bool {
+                    vector<string> b = a->getMean();
+                    return find_if(b.begin(),b.end(),[flag](const string& a)->bool {return strMatch(a,flag);}) != b.end();
+                }, mean));
+            } else {
                 string name;
-                cout<<"Please enter a name.>>> ";
-                cin>>name;
-                singWords(searchW([](word* a, const string& flag)->bool{return a->name == flag;},name));
+                cout << "Please enter a name.>>> ";
+                cin >> name;
+                singWords(searchW([](word *a, const string &flag) -> bool { return strMatch(a->name, flag); }, name));
             }
         } else if (choice == 2) {
             string w;
@@ -297,10 +311,12 @@ void search() {
             cin >> w;
             while (w != "#") {
                 //cout<<endl;
-                if (wrds.count(w)) {
+                if (find_if(wrds.begin(), wrds.end(),
+                            [w](const pair<const string, word *>& a) -> bool { return strMatch(a.first, w); }) != wrds.end()) {
                     vector<group *> que;
                     for (group *i : grps) {
-                        if (find(i->words.begin(), i->words.end(), wrds[w]) != i->words.end()) {
+                        if (find_if(i->words.begin(), i->words.end(),
+                                    [w](word *a) -> bool { return strMatch(a->name, w); }) != i->words.end()) {
                             que.push_back(i);
                         }
                     }
@@ -329,7 +345,7 @@ void search() {
                 "\t\t|     2. search for group.     |\t\t\n"
                 "\t\t|     3. exit()                |\t\t\n"
                 "\t\t--------------------------------\t\t\n";
-        cin>>choice;
+        cin >> choice;
     }
 }
 

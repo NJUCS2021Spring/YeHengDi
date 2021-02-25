@@ -30,6 +30,8 @@ void singWords(const std::map<std::string,word*>& bank = wrds);
 
 void editW();
 
+bool strMatch(const std::string& target, const std::string& feature);
+
 void load();
 
 void mainMenu();
@@ -46,7 +48,7 @@ void allGroup();
 
 void editWordCard();
 
-void modifyLineData(char *fileName, int lineNum, std::string lineData);
+void modifyLineData(char *fileName, unsigned lineNum, const std::string& lineData);
 
 int getLineNumber(std::ifstream &a, const std::string &name);
 
