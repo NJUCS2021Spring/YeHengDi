@@ -34,7 +34,7 @@ searchW(bool(*comp)(word *, const string &), const string &flag, const map<strin
     return res;
 }
 
-void errorProcess(const string &msg, void(*func)() = []()->void {}) {
+void errorProcess(const string &msg, void(*func)() = []() -> void {}) {
     while (cin.fail()) {
         cout << msg << endl;
         cin.clear();
@@ -170,13 +170,13 @@ void readGroup() {
         } else {
             auto *a = new group(wds, isName, temp[1]);
             grps.push_back(a);
-            if(temp[2] != "0"){
+            if (temp[2] != "0") {
                 a->oppID = stoi(temp[2]);
             }
         }
     }
-    for(auto& g:grps){
-        if(g->oppID){
+    for (auto &g:grps) {
+        if (g->oppID) {
             g->addOppos(grps[g->oppID]);
         }
     }
@@ -273,38 +273,48 @@ void groupEdit(group *g) {
             } else {
                 cout << "Not found, please enter something else.\n";
             }
-        }else if(i == 3){
-            if(g->Reason()){
+        } else if (i == 3) {
+            if (g->Reason()) {
                 errorProcess("A group grouped by reason does not have an opposite group.\n");
-            }else {
+            } else {
                 vector<group *> que;
                 for (const auto &candi:grps) {
                     if (!candi->Reason()) {
                         que.push_back(candi);
                     }
                 }
-                unsigned num;
-                do {
-                    groupProfile(que);
-                    cout << "Which group? Enter # to exit.\n>>> ";
-                    cin >> num;
-                }while(find_if(que.begin(),que.end(),[num](group* g)->bool{return g->ID() == num;})==que.end());
-                g->addOppos(grps[num]);
+                char num;
+                cout << "Which group? Enter # to exit.\n>>> ";
+                cin >> num;
+                if(num != '#') {
+                    if (find_if(que.begin(), que.end(), [num](group *g) -> bool { return g->ID() == num - '0'; }) !=
+                        que.end()){
+                        groupProfile(que);
+                    }else{
+                        errorProcess("Invalid input.");
+                        do {
+                            groupProfile(que);
+                            cin>>num;
+                        } while (find_if(que.begin(), que.end(), [num](group *g) -> bool { return g->ID() == num - '0'; }) ==
+                                 que.end());
+                    }
+                    g->addOppos(grps[num - '0']);
+                }
             }
         }
         modifyLineData("data/groups.bk", g->ID() + 1, g->toStr());
-        cout <<"\t\t--------------------------\t\t\n"
-               "\t\t|      1.add word        |\t\t\n"
-               "\t\t|      2.edit words      |\t\t\n"
-               "\t\t|      3.add opposite    |\t\t\n"
-               "\t\t|      4.exit()          |\t\t\n"
-               "\t\t--------------------------\t\t\n";
+        cout << "\t\t--------------------------\t\t\n"
+                "\t\t|      1.add word        |\t\t\n"
+                "\t\t|      2.edit words      |\t\t\n"
+                "\t\t|      3.add opposite    |\t\t\n"
+                "\t\t|      4.exit()          |\t\t\n"
+                "\t\t--------------------------\t\t\n";
         cout << "Please choose one.\n>>> ";
         cin >> i;
     }
 }
 
-void groupFace(vector<group *> gpList = grps){
+void groupFace(vector<group *> gpList = grps) {
     groupProfile(gpList);
     cout << "Choose group? Enter x to exit.\n"
             ">>> ";
@@ -324,6 +334,7 @@ void groupFace(vector<group *> gpList = grps){
         cin >> i;
     }
 }
+
 //MAINMENU 1 (used to find the groups a word belongs to.
 void search() {
     cout << "\t\t--------------------------------\t\t\n"
@@ -345,7 +356,8 @@ void search() {
                 cin >> mean;
                 singWords(searchW([](word *a, const string &flag) -> bool {
                     vector<string> b = a->getMean();
-                    return find_if(b.begin(),b.end(),[flag](const string& a)->bool {return strMatch(a,flag);}) != b.end();
+                    return find_if(b.begin(), b.end(), [flag](const string &a) -> bool { return strMatch(a, flag); }) !=
+                           b.end();
                 }, mean));
             } else {
                 string name;
@@ -359,7 +371,8 @@ void search() {
             cin >> w;
             while (w != "#") {
                 if (find_if(wrds.begin(), wrds.end(),
-                            [w](const pair<const string, word *>& a) -> bool { return strMatch(a.first, w); }) != wrds.end()) {
+                            [w](const pair<const string, word *> &a) -> bool { return strMatch(a.first, w); }) !=
+                    wrds.end()) {
                     vector<group *> que;
                     for (group *i : grps) {
                         if (find_if(i->words.begin(), i->words.end(),

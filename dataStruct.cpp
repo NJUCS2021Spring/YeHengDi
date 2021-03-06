@@ -125,7 +125,10 @@ public:
     }
 
     void addOppos(group *other) {
-        if (this->isName || other->isName)return;
+        if (this->isName || other->isName||this == other)return;
+        if(this->oppos){
+            this->oppos->oppos = nullptr;
+        }
         this->oppos = other;
         other->oppos = this;
         this->oppID = other->ID();

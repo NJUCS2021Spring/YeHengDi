@@ -18,12 +18,6 @@ vector
 iostream
 -
 
-D:/Project1/main.cpp
-iostream
--
-process.h
-D:/Project1/process.h
-
 D:/Project1/process.cpp
 map
 -
@@ -34,14 +28,6 @@ iostream
 vector
 -
 iomanip
--
-dataStruct.cpp
-D:/Project1/dataStruct.cpp
-
-D:/Project1/process.h
-vector
--
-map
 -
 dataStruct.cpp
 D:/Project1/dataStruct.cpp
