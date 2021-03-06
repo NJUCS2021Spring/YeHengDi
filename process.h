@@ -44,6 +44,8 @@ void newGroup();
 
 void groupEdit();
 
+void groupFace(std::vector<group *> gpList = grps);
+
 void allGroup();
 
 void editWordCard();

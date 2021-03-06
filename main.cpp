@@ -21,6 +21,9 @@ int main() {
             mainMenu();
             cin>>i;
         }else if (i == 6){
+            for(const auto& g:grps){
+                modifyLineData("data/groups.bk",g->ID() + 1,g->toStr());
+            }
             return 0;
         }else{
             errorProcess("Please do not enter shit.", mainMenu);

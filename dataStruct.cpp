@@ -60,26 +60,28 @@ public:
         pt.close();
     }
 
-    std::string toStr(){
+    std::string toStr() {
         std::string str = this->name + '/';
-        for (const std::string &i : this->meaning){
+        for (const std::string &i : this->meaning) {
             str += i + ';';
         }
         str += '/' + this->example;
         return str;
     }
 
-    std::vector<std::string> getMean(){
+    std::vector<std::string> getMean() {
         return this->meaning;
     }
 
 };//word class.
 static unsigned globalID = 0;
+
 class group {
 private:
-
     unsigned id;
     bool isName;
+    group *oppos = nullptr;
+
 
     static bool sortword(word *A, word *B) {
         return mystrCmp(A->name, B->name);
@@ -90,8 +92,10 @@ private:
     }
 
 public:
+    unsigned oppID = 0;
     std::string reason;
     std::vector<word *> words;
+
     explicit group(const std::vector<word *> &wrds = {}, bool isName = true, const std::string &reason = "") {
         this->id = globalID;
         globalID++;
@@ -114,17 +118,30 @@ public:
     }
 
     void addMember(word *wrd) {
-        if(find(this->words.begin(),this->words.end(), wrd) == this->words.end()) {
+        if (find(this->words.begin(), this->words.end(), wrd) == this->words.end()) {
             this->words.push_back(wrd);
             this->srt();
         }
     }
 
-    unsigned ID(){
+    void addOppos(group *other) {
+        if (this->isName || other->isName)return;
+        this->oppos = other;
+        other->oppos = this;
+        this->oppID = other->ID();
+        other->oppID = this->ID();
+    }
+
+    void delOppos() {
+        this->oppos->oppos = nullptr;
+        this->oppos = nullptr;
+    }
+
+    unsigned ID() {
         return this->id;
     }
 
-    bool Reason(){
+    bool Reason() {
         return this->isName;
     }
 
@@ -142,6 +159,9 @@ public:
             std::cout << i + 1 << ". ";
             word::display(grp.words[i]);
         }
+        if(grp.oppos) {
+            std::cout << "Opposite Group: " << grp.oppos->ID() << "\n";
+        }
     }
 
     static void write(const group &grp) {
@@ -151,16 +171,17 @@ public:
         for (const word *i : grp.words) {
             w << i->name << ';';
         }
-        w << '/' << (grp.isName ? "#" : grp.reason) << '\n';
+        w << '/' << (grp.isName ? "#" : grp.reason) << '/';
+        w << (grp.oppos?(grp.oppos->ID()):-1) << '\n';
         w.close();
     }
 
-    std::string toStr(){
+    std::string toStr() {
         std::string str;
-        for(const word *i : this->words){
+        for (const word *i : this->words) {
             str += i->name + ';';
         }
-        str += '/' + (this->isName ? "#" : this->reason);
+        str += '/' + (this->isName ? "#" : this->reason) + '/' + (char)((int)'0' + (this->oppos?this->oppos->ID():0));
         return str;
     }
 

@@ -34,7 +34,7 @@ searchW(bool(*comp)(word *, const string &), const string &flag, const map<strin
     return res;
 }
 
-void errorProcess(const string &msg, void(*func)()) {
+void errorProcess(const string &msg, void(*func)() = []()->void {}) {
     while (cin.fail()) {
         cout << msg << endl;
         cin.clear();
@@ -170,6 +170,14 @@ void readGroup() {
         } else {
             auto *a = new group(wds, isName, temp[1]);
             grps.push_back(a);
+            if(temp[2] != "0"){
+                a->oppID = stoi(temp[2]);
+            }
+        }
+    }
+    for(auto& g:grps){
+        if(g->oppID){
+            g->addOppos(grps[g->oppID]);
         }
     }
 }
@@ -237,12 +245,13 @@ void groupEdit(group *g) {
     cout << "\t\t--------------------------\t\t\n"
             "\t\t|      1.add word        |\t\t\n"
             "\t\t|      2.edit words      |\t\t\n"
-            "\t\t|      3.exit()          |\t\t\n"
+            "\t\t|      3.add opposite    |\t\t\n"
+            "\t\t|      4.exit()          |\t\t\n"
             "\t\t--------------------------\t\t\n";
     int i;
     cout << "Please choose one.\n>>> ";
     cin >> i;
-    while (i - 3) {
+    while (i - 4) {
         if (i == 1) {
             cout << "Please enter word.\n>>> ";
             string name;
@@ -264,18 +273,57 @@ void groupEdit(group *g) {
             } else {
                 cout << "Not found, please enter something else.\n";
             }
+        }else if(i == 3){
+            if(g->Reason()){
+                errorProcess("A group grouped by reason does not have an opposite group.\n");
+            }else {
+                vector<group *> que;
+                for (const auto &candi:grps) {
+                    if (!candi->Reason()) {
+                        que.push_back(candi);
+                    }
+                }
+                unsigned num;
+                do {
+                    groupProfile(que);
+                    cout << "Which group? Enter # to exit.\n>>> ";
+                    cin >> num;
+                }while(find_if(que.begin(),que.end(),[num](group* g)->bool{return g->ID() == num;})==que.end());
+                g->addOppos(grps[num]);
+            }
         }
         modifyLineData("data/groups.bk", g->ID() + 1, g->toStr());
-        cout << "\t\t--------------------------\t\t\n"
-                "\t\t|      1.add word        |\t\t\n"
-                "\t\t|      2.edit words      |\t\t\n"
-                "\t\t|      3.exit()          |\t\t\n"
-                "\t\t--------------------------\t\t\n";
+        cout <<"\t\t--------------------------\t\t\n"
+               "\t\t|      1.add word        |\t\t\n"
+               "\t\t|      2.edit words      |\t\t\n"
+               "\t\t|      3.add opposite    |\t\t\n"
+               "\t\t|      4.exit()          |\t\t\n"
+               "\t\t--------------------------\t\t\n";
         cout << "Please choose one.\n>>> ";
         cin >> i;
     }
 }
 
+void groupFace(vector<group *> gpList = grps){
+    groupProfile(gpList);
+    cout << "Choose group? Enter x to exit.\n"
+            ">>> ";
+    char i;
+    cin >> i;
+    while (i != 'x') {
+        int index = (int) (i - '0');
+        if (index < gpList.size()) {
+            newline();
+            group::display(*gpList[index]);
+            newline();
+            groupEdit(gpList[index]);
+        } else {
+            cout << "This group does not exist.\n";
+        }
+        cout << "Choose group? Enter x to exit.\n>>> ";
+        cin >> i;
+    }
+}
 //MAINMENU 1 (used to find the groups a word belongs to.
 void search() {
     cout << "\t\t--------------------------------\t\t\n"
@@ -310,7 +358,6 @@ void search() {
             cout << "Enter a word in the group, enter # to exit\n>>> ";
             cin >> w;
             while (w != "#") {
-                //cout<<endl;
                 if (find_if(wrds.begin(), wrds.end(),
                             [w](const pair<const string, word *>& a) -> bool { return strMatch(a.first, w); }) != wrds.end()) {
                     vector<group *> que;
@@ -323,7 +370,7 @@ void search() {
                     if (que.empty()) {
                         cout << "This word doesn't belong to any group.\n";
                     } else {
-                        groupProfile(que);
+                        groupFace(que);
                     }
                 } else {
                     cout << "Word not found, please check your word bank and enter again.\n";
@@ -386,24 +433,7 @@ void newGroup() {
 
 //MAINMENU3 (display all groups
 void allGroup() {
-    groupProfile(grps);
-    cout << "Choose group? Enter x to exit.\n"
-            ">>> ";
-    char i;
-    cin >> i;
-    while (i != 'x') {
-        int index = (int) (i - '0');
-        if (index < grps.size()) {
-            newline();
-            group::display(*grps[index]);
-            newline();
-            groupEdit(grps[index]);
-        } else {
-            cout << "This group does not exist.\n";
-        }
-        cout << "Choose group? Enter x to exit.\n>>> ";
-        cin >> i;
-    }
+    groupFace();
 }
 
 //MAINMENU4 (edit word information.
