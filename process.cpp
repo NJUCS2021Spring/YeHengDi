@@ -35,12 +35,12 @@ searchW(bool(*comp)(word *, const string &), const string &flag, const map<strin
 }
 
 void errorProcess(const string &msg, void(*func)() = []() -> void {}) {
-    while (cin.fail()) {
+    do{
         cout << msg << endl;
         cin.clear();
         cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
         func();
-    }
+    }while (cin.fail()) ;
 }
 
 void modifyLineData(char *fileName, unsigned lineNum, const string &lineData) {
